@@ -19,21 +19,20 @@ import java.time.LocalDateTime;
 @Data
 public class Bill {
     @Id
-    private String id;
-
+    private String billId;
     @Field(name = "accountNumber")
     private String accountNumber;
-
     @Field(name = "acquisition")
     private Acquisition acquisition;
-
-    @Field(name = "dateOpened")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dateOpened = LocalDateTime.now();;
-
+    @Field(name = "typeCurrency") //Tipo de moneda
+    private String typeCurrency;
     @Field(name = "balance")
     private double balance;
 
-    @Field(name = "limitMovementsMonth")
-    private int limitMovementsMonth;
+    @Field(name = "status")
+    private String status;
+    @Field(name = "dateOpened")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dateOpened = LocalDateTime.now();;
 }
+

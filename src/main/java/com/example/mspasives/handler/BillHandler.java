@@ -64,19 +64,19 @@ public class BillHandler {
     public Mono<ServerResponse> save(ServerRequest request){
         Mono<Bill> bill = request.bodyToMono(Bill.class);
         return bill.flatMap(p-> {
-                    return billService.create(p);
-                }).flatMap(p -> ServerResponse.created(URI.create("/bill/".concat(p.getId())))
-                        .contentType(APPLICATION_JSON)
-                        .bodyValue(p))
-                .onErrorResume(error -> {
-                    WebClientResponseException errorResponse = (WebClientResponseException) error;
-                    if(errorResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
-                        return ServerResponse.badRequest()
-                                .contentType(APPLICATION_JSON)
-                                .bodyValue(errorResponse.getResponseBodyAsString());
-                    }
-                    return Mono.error(errorResponse);
-                });
+                return billService.create(p);
+            }).flatMap(p -> ServerResponse.created(URI.create("/bill/".concat(p.getBillId())))
+                    .contentType(APPLICATION_JSON)
+                    .bodyValue(p))
+            .onErrorResume(error -> {
+                WebClientResponseException errorResponse = (WebClientResponseException) error;
+                if(errorResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                    return ServerResponse.badRequest()
+                            .contentType(APPLICATION_JSON)
+                            .bodyValue(errorResponse.getResponseBodyAsString());
+                }
+                return Mono.error(errorResponse);
+            });
     }
 
     public Mono<ServerResponse> update(ServerRequest request){
@@ -87,10 +87,10 @@ public class BillHandler {
                             currentBill.setAccountNumber(billEdit.getAccountNumber());
                             currentBill.setBalance(billEdit.getBalance());
                             currentBill.setDateOpened(currentBill.getDateOpened());
-                            currentBill.setLimitMovementsMonth(10);
+                            //currentBill.setLimitMovementsMonth(10);
                             currentBill.setAcquisition(billEdit.getAcquisition());
                             return billService.update(currentBill);
-                        })).flatMap(billUpdate -> ServerResponse.created(URI.create("/bill/".concat(billUpdate.getId())))
+                        })).flatMap(billUpdate -> ServerResponse.created(URI.create("/bill/".concat(billUpdate.getBillId())))
                         .contentType(APPLICATION_JSON)
                         .bodyValue(billUpdate))
                 .onErrorResume(e -> Mono.error(new RuntimeException("Error update bill")));
